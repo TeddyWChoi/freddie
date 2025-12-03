@@ -83,6 +83,7 @@ export default defineConfig({
     target: 'esnext',
     outDir: 'build',
   },
+  base: '/freddie/',
   server: {
     port: 3001,
     open: true,
