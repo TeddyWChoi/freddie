@@ -1,13 +1,13 @@
 import React from "react";
 import { motion } from "motion/react";
 import goods1 from "figma:asset/3af122ce083b3db6a8cc2d9c89d851fd027e660e.png";
-import goods2 from "figma:asset/5ca1d79b594b5c43976b3cfbaec42b4056960494.png";
+import goods2 from "../assets/photocard.png";
 import goods3 from "figma:asset/7fa0d50255b7d0d456496016ed49543a3a010b4f.png";
 
 export function GoodsSection() {
   const items = [
     { img: goods1, name: "LIMITED LP", price: "₩89,000" },
-    { img: goods2, name: "HANBOK JACKET", price: "₩450,000" },
+    { img: goods2, name: "PHOTO CARD", price: "₩15,000" },
     {
       img: goods3,
       name: "MERCURY CROWN T-SHIRT",

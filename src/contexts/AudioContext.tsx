@@ -2,34 +2,41 @@ import React, { createContext, useContext, useState, useRef, useEffect, ReactNod
 import goldenMp3 from '../assets/golden.mp3';
 import aptMp3 from '../assets/apt.mp3';
 import uphillMp3 from '../assets/uphill.mp3';
+import golden2Mp3 from '../assets/golden2.mp3';
+import apt2Mp3 from '../assets/apt2.mp3';
+import uphill2Mp3 from '../assets/uphill2.mp3';
 
 interface Track {
   id: number;
   title: string;
   audioSrc: string;
+  previewSrc: string;
 }
+
 
 interface AudioContextType {
   currentTrack: number;
+  currentVersion: 'full' | 'preview';
   isPlaying: boolean;
   volume: number;
   frequencyData: Uint8Array;
-  playTrack: (trackIndex: number) => void;
-  togglePlayPause: () => void;
+  playTrack: (trackIndex: number, version?: 'full' | 'preview') => void;
+  togglePlayPause: (version?: 'full' | 'preview') => void;
   setVolume: (volume: number) => void;
   tracks: Track[];
 }
 
 const tracks: Track[] = [
-  { id: 0, title: 'Golden', audioSrc: goldenMp3 },
-  { id: 1, title: 'APT.', audioSrc: aptMp3 },
-  { id: 2, title: 'Uphill', audioSrc: uphillMp3 },
+  { id: 0, title: 'Golden', audioSrc: goldenMp3, previewSrc: golden2Mp3 },
+  { id: 1, title: 'APT.', audioSrc: aptMp3, previewSrc: apt2Mp3 },
+  { id: 2, title: 'Uphill', audioSrc: uphillMp3, previewSrc: uphill2Mp3 },
 ];
 
 const AudioContext = createContext<AudioContextType | undefined>(undefined);
 
 export function AudioProvider({ children }: { children: ReactNode }) {
   const [currentTrack, setCurrentTrack] = useState(0);
+  const [currentVersion, setCurrentVersion] = useState<'full' | 'preview'>('full');
   const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolumeState] = useState(0.7);
   const [frequencyData, setFrequencyData] = useState(new Uint8Array(48));
@@ -49,8 +56,10 @@ export function AudioProvider({ children }: { children: ReactNode }) {
 
     // Event listener for track end
     const handleTrackEnd = () => {
+      // If playing full version, go to next full version
+      // If playing preview, maybe just stop? Or loop? Let's assume loop to next track's same version
       const nextTrack = (currentTrack + 1) % tracks.length;
-      playTrack(nextTrack);
+      playTrack(nextTrack, currentVersion);
     };
 
     audio.addEventListener('ended', handleTrackEnd);
@@ -117,11 +126,15 @@ export function AudioProvider({ children }: { children: ReactNode }) {
     updateFrequencyData();
   };
 
-  const playTrack = async (trackIndex: number) => {
+  const playTrack = async (trackIndex: number, version: 'full' | 'preview' = 'full') => {
     if (!audioRef.current) return;
 
     setCurrentTrack(trackIndex);
-    audioRef.current.src = tracks[trackIndex].audioSrc;
+    setCurrentVersion(version);
+
+    // Select source based on version
+    const src = version === 'full' ? tracks[trackIndex].audioSrc : tracks[trackIndex].previewSrc;
+    audioRef.current.src = src;
     audioRef.current.volume = volume;
 
     try {
@@ -136,8 +149,17 @@ export function AudioProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const togglePlayPause = async () => {
+  const togglePlayPause = async (version?: 'full' | 'preview') => {
     if (!audioRef.current) return;
+
+    // specific logic if switching versions on same track
+    const targetVersion = version || currentVersion;
+
+    // If we're changing versions, we treat it like a new play request
+    if (version && version !== currentVersion) {
+      playTrack(currentTrack, version);
+      return;
+    }
 
     if (isPlaying) {
       audioRef.current.pause();
@@ -168,6 +190,7 @@ export function AudioProvider({ children }: { children: ReactNode }) {
     <AudioContext.Provider
       value={{
         currentTrack,
+        currentVersion,
         isPlaying,
         volume,
         frequencyData,

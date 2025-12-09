@@ -48,7 +48,7 @@ export function VisualsSection() {
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            onClick={() => setSelectedVideo("https://www.youtube.com/embed/YIV_URly8g0?autoplay=1")}
+            onClick={() => setSelectedVideo("https://www.youtube.com/embed/qKm9-OX8QSo?autoplay=1")}
             className="md:col-span-2 md:row-span-2 relative rounded-sm overflow-hidden border border-white/10 group cursor-pointer"
           >
             <img
@@ -221,7 +221,7 @@ export function VisualsSection() {
                 <line x1="6" y1="6" x2="18" y2="18"></line>
               </svg>
             </button>
-            
+
             <motion.div
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}

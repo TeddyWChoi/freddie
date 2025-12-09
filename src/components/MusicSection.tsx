@@ -16,15 +16,24 @@ interface TrackItemProps {
 }
 
 function TrackItem({ index, trackId, image, title, sub, desc, activeColor }: TrackItemProps) {
-  const { currentTrack, isPlaying, playTrack, togglePlayPause } = useAudio();
+  const { currentTrack, currentVersion, isPlaying, playTrack, togglePlayPause } = useAudio();
   const isCurrentTrack = currentTrack === trackId;
-  const isThisTrackPlaying = isCurrentTrack && isPlaying;
+  const isPreviewPlaying = isCurrentTrack && isPlaying && currentVersion === 'preview';
+  const isFullPlaying = isCurrentTrack && isPlaying && currentVersion === 'full';
 
-  const handlePlayClick = () => {
-    if (isCurrentTrack) {
+  const handlePreviewClick = () => {
+    if (isCurrentTrack && currentVersion === 'preview') {
       togglePlayPause();
     } else {
-      playTrack(trackId);
+      playTrack(trackId, 'preview');
+    }
+  };
+
+  const handleFullClick = () => {
+    if (isCurrentTrack && currentVersion === 'full') {
+      togglePlayPause();
+    } else {
+      playTrack(trackId, 'full');
     }
   };
 
@@ -39,17 +48,18 @@ function TrackItem({ index, trackId, image, title, sub, desc, activeColor }: Tra
       {/* Hover Glow Effect */}
       <div className={`absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-${activeColor} to-transparent ${isCurrentTrack ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'} transition-opacity duration-500`} />
 
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center px-4">
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-center px-4">
         {/* Index */}
         <div className="md:col-span-1 hidden md:block">
-          <span className={`text-lg font-bold tracking-widest transition-colors ${isCurrentTrack ? `text-${activeColor}` : 'text-white/30 group-hover:text-' + activeColor}`}>{index}</span>
+          <span className={`text-lg font-bold tracking-widest transition-colors ${isCurrentTrack ? `text-${activeColor}` : 'text-white/30 group-hover:text-white'}`}>{index}</span>
         </div>
 
         {/* Album Cover Image - Made Larger */}
-        <div className="md:col-span-3">
+        {/* Album Cover Image - Adjustable size */}
+        <div className="md:col-span-2">
           <div className={`relative aspect-square w-full overflow-hidden rounded-lg border transition-all shadow-2xl ${isCurrentTrack ? `border-${activeColor}/50` : 'border-white/10 group-hover:border-white/30'}`}>
             <img src={image} alt={title} className={`w-full h-full object-cover transition-all duration-700 ${isCurrentTrack ? 'opacity-100 scale-105' : 'opacity-90 group-hover:opacity-100 group-hover:scale-105'}`} />
-            {isThisTrackPlaying && (
+            {isCurrentTrack && isPlaying && (
               <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-transparent to-cyan-500/20 animate-pulse" />
             )}
           </div>
@@ -57,7 +67,7 @@ function TrackItem({ index, trackId, image, title, sub, desc, activeColor }: Tra
 
         {/* Title & Subtitle */}
         <div className="md:col-span-4 pl-4">
-          <h3 className={`text-4xl md:text-6xl font-serif mb-3 transition-all ${isCurrentTrack ? 'text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400' : 'text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-gray-400'}`}>
+          <h3 className="text-4xl md:text-6xl font-serif mb-3 text-white transition-all">
             {title}
           </h3>
           <p className={`text-xs md:text-sm text-${activeColor} uppercase tracking-[0.2em] font-medium opacity-80`}>{sub}</p>
@@ -69,27 +79,55 @@ function TrackItem({ index, trackId, image, title, sub, desc, activeColor }: Tra
         </div>
 
         {/* Play/Pause Button */}
-        <div className="md:col-span-1 flex justify-end">
-          <button
-            onClick={handlePlayClick}
-            className={`w-16 h-16 rounded-full border flex items-center justify-center transition-all hover:scale-110 ${isCurrentTrack
+        {/* Play/Pause Button */}
+        <div className="md:col-span-2 flex flex-row gap-12 justify-end items-center border border-white/20 rounded-xl px-6 py-4 bg-white/5">
+          {/* Preview Button Group */}
+          <div className="flex flex-col items-center gap-2">
+            <span className="text-[10px] text-white/50 font-medium tracking-widest uppercase">Demo</span>
+            <button
+              onClick={handlePreviewClick}
+              className={`w-14 h-14 rounded-full border flex items-center justify-center transition-all hover:scale-110 ${isPreviewPlaying
                 ? `border-${activeColor} bg-${activeColor}/20`
-                : `border-white/10 group-hover:border-${activeColor} group-hover:bg-${activeColor}/10`
-              }`}
-          >
-            {isThisTrackPlaying ? (
-              // Pause icon
-              <svg width="16" height="16" viewBox="0 0 12 14" fill="none" className="fill-white transition-colors">
-                <rect x="2" y="2" width="2.5" height="10" />
-                <rect x="7.5" y="2" width="2.5" height="10" />
-              </svg>
-            ) : (
-              // Play icon
-              <svg width="16" height="16" viewBox="0 0 12 14" fill="none" className="fill-white group-hover:fill-white transition-colors">
-                <path d="M10.5 7L1.5 12.1962L1.5 1.80385L10.5 7Z" />
-              </svg>
-            )}
-          </button>
+                : `border-white/30 group-hover:border-${activeColor} group-hover:bg-${activeColor}/10`
+                }`}
+              title="Demo"
+            >
+              {isPreviewPlaying ? (
+                <svg width="14" height="14" viewBox="0 0 12 14" fill="none" className="fill-white transition-colors">
+                  <rect x="2" y="2" width="2.5" height="10" />
+                  <rect x="7.5" y="2" width="2.5" height="10" />
+                </svg>
+              ) : (
+                <svg width="14" height="14" viewBox="0 0 12 14" fill="none" className="fill-white group-hover:fill-white transition-colors">
+                  <path d="M10.5 7L1.5 12.1962L1.5 1.80385L10.5 7Z" />
+                </svg>
+              )}
+            </button>
+          </div>
+
+          {/* Full Version Button Group */}
+          <div className="flex flex-col items-center gap-2">
+            <span className="text-[10px] text-white/50 font-medium tracking-widest uppercase">Full</span>
+            <button
+              onClick={handleFullClick}
+              className={`w-14 h-14 rounded-full border flex items-center justify-center transition-all hover:scale-110 ${isFullPlaying
+                ? `border-${activeColor} bg-${activeColor}/20`
+                : `border-white/30 group-hover:border-${activeColor} group-hover:bg-${activeColor}/10`
+                }`}
+              title="Full"
+            >
+              {isFullPlaying ? (
+                <svg width="14" height="14" viewBox="0 0 12 14" fill="none" className="fill-white transition-colors">
+                  <rect x="2" y="2" width="2.5" height="10" />
+                  <rect x="7.5" y="2" width="2.5" height="10" />
+                </svg>
+              ) : (
+                <svg width="14" height="14" viewBox="0 0 12 14" fill="none" className="fill-white group-hover:fill-white transition-colors">
+                  <path d="M10.5 7L1.5 12.1962L1.5 1.80385L10.5 7Z" />
+                </svg>
+              )}
+            </button>
+          </div>
         </div>
       </div>
     </motion.div>
@@ -104,7 +142,7 @@ export function MusicSection() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="mb-32"
+          className="mb-12"
         >
           <div className="flex items-center gap-4 mb-6">
             <div className="w-8 h-px bg-cyan-500" />
