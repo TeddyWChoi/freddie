@@ -80,7 +80,7 @@ function TrackItem({ index, trackId, image, title, sub, desc, activeColor }: Tra
 
         {/* Play/Pause Button */}
         {/* Play/Pause Button */}
-        <div className="md:col-span-2 flex flex-row gap-12 justify-end items-center border border-white/20 rounded-xl px-6 py-4 bg-white/5">
+        <div className="md:col-span-2 flex flex-row gap-12 justify-end items-center border border-white/20 rounded-xl px-8 py-6 bg-white/5 my-4">
           {/* Preview Button Group */}
           <div className="flex flex-col items-center gap-2">
             <span className="text-[10px] text-white/50 font-medium tracking-widest uppercase">Demo</span>
