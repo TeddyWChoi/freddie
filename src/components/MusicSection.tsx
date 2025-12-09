@@ -48,15 +48,14 @@ function TrackItem({ index, trackId, image, title, sub, desc, activeColor }: Tra
       {/* Hover Glow Effect */}
       <div className={`absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-${activeColor} to-transparent ${isCurrentTrack ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'} transition-opacity duration-500`} />
 
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-center px-4">
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center px-4">
         {/* Index */}
         <div className="md:col-span-1 hidden md:block">
           <span className={`text-lg font-bold tracking-widest transition-colors ${isCurrentTrack ? `text-${activeColor}` : 'text-white/30 group-hover:text-white'}`}>{index}</span>
         </div>
 
         {/* Album Cover Image - Made Larger */}
-        {/* Album Cover Image - Adjustable size */}
-        <div className="md:col-span-2">
+        <div className="md:col-span-3">
           <div className={`relative aspect-square w-full overflow-hidden rounded-lg border transition-all shadow-2xl ${isCurrentTrack ? `border-${activeColor}/50` : 'border-white/10 group-hover:border-white/30'}`}>
             <img src={image} alt={title} className={`w-full h-full object-cover transition-all duration-700 ${isCurrentTrack ? 'opacity-100 scale-105' : 'opacity-90 group-hover:opacity-100 group-hover:scale-105'}`} />
             {isCurrentTrack && isPlaying && (
@@ -66,7 +65,7 @@ function TrackItem({ index, trackId, image, title, sub, desc, activeColor }: Tra
         </div>
 
         {/* Title & Subtitle */}
-        <div className="md:col-span-4 pl-4">
+        <div className="md:col-span-3 pl-3">
           <h3 className="text-4xl md:text-6xl font-serif mb-3 text-white transition-all">
             {title}
           </h3>
@@ -79,11 +78,10 @@ function TrackItem({ index, trackId, image, title, sub, desc, activeColor }: Tra
         </div>
 
         {/* Play/Pause Button */}
-        {/* Play/Pause Button */}
-        <div className="md:col-span-2 flex flex-row gap-12 justify-end items-center border border-white/20 rounded-xl px-8 py-6 bg-white/5 my-4">
+        <div className="md:col-span-2 flex flex-row gap-8 justify-end items-center">
           {/* Preview Button Group */}
           <div className="flex flex-col items-center gap-2">
-            <span className="text-[10px] text-white/50 font-medium tracking-widest uppercase">Demo</span>
+            <span className="text-[7px] text-white/50 font-medium tracking-widest uppercase">Demo</span>
             <button
               onClick={handlePreviewClick}
               className={`w-14 h-14 rounded-full border flex items-center justify-center transition-all hover:scale-110 ${isPreviewPlaying
@@ -107,7 +105,7 @@ function TrackItem({ index, trackId, image, title, sub, desc, activeColor }: Tra
 
           {/* Full Version Button Group */}
           <div className="flex flex-col items-center gap-2">
-            <span className="text-[10px] text-white/50 font-medium tracking-widest uppercase">Full</span>
+            <span className="text-[7px] text-white/50 font-medium tracking-widest uppercase">Full</span>
             <button
               onClick={handleFullClick}
               className={`w-14 h-14 rounded-full border flex items-center justify-center transition-all hover:scale-110 ${isFullPlaying
@@ -142,7 +140,7 @@ export function MusicSection() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="mb-12"
+          className="mb-32"
         >
           <div className="flex items-center gap-4 mb-6">
             <div className="w-8 h-px bg-cyan-500" />
