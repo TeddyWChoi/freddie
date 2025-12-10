@@ -52,7 +52,7 @@ export function Footer() {
         <p>
           © 2025 Seoul Rhapsody Project. All rights reserved.
         </p>
-        <p>Designed by AI & Human Collaboration</p>
+
       </div>
     </footer>
   );
