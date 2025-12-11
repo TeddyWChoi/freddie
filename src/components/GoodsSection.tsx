@@ -10,7 +10,7 @@ export function GoodsSection() {
     { img: goods2, name: "PHOTO CARD", price: "₩15,000" },
     {
       img: goods3,
-      name: "MERCURY CROWN T-SHIRT",
+      name: "MERCURY NEON T-SHIRT",
       price: "₩65,000",
     },
   ];
